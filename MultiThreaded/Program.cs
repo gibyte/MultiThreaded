@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 
 int[] array1 = GenerateRandomArray(100000);
 int[] array2 = GenerateRandomArray(1000000);
@@ -43,8 +44,8 @@ static void MeasureTime(int[] array, string message)
 
 static void NormalSum(int[] array)
 {
-    
-    int sum = 0;
+
+    BigInteger sum = 0;
     foreach (int num in array)
     {
         sum += num;
@@ -55,7 +56,7 @@ static void NormalSum(int[] array)
 static void ThreadsSum(int[] array)
 {
     int chunkSize = array.Length / 4; // Размер части массива для каждого потока
-    int[] results = new int[4];
+    BigInteger[] results = new BigInteger[4];
     Thread[] threads = new Thread[results.Length];
 
     for (int i = 0; i < results.Length; i++)
@@ -70,20 +71,20 @@ static void ThreadsSum(int[] array)
         thread.Join();
     }
 
-    int totalSum = 0;
-    foreach (int result in results)
+    BigInteger sum = 0;
+    foreach (BigInteger result in results)
     {
-        totalSum += result;
+        sum += result;
     }
-    Console.WriteLine("Sum: " + totalSum);
+    Console.WriteLine("Sum: " + sum);
 }
 
-static void CalculateSum(int[] array, int threadIndex, int[] results)
+static void CalculateSum(in int[] array, int threadIndex, BigInteger[] results)
 {
     int chunkSize = array.Length / results.Length;
     int startIndex = threadIndex * chunkSize;
     int endIndex = (threadIndex == results.Length - 1) ? array.Length : (threadIndex + 1) * chunkSize;
-    int sum = 0;
+    BigInteger sum = 0;
 
     for (int i = startIndex; i < endIndex; i++)
     {
@@ -95,7 +96,8 @@ static void CalculateSum(int[] array, int threadIndex, int[] results)
 
 static void LINQSum(int[] array)
 {
-    long sum = array.AsParallel().Sum();
+    BigInteger sum = array.AsParallel().Sum(e => (long)e);
+    //BigInteger sum = array.Aggregate(new BigInteger(0), (currentSum, item) => currentSum + item);
     Console.WriteLine("Sum: " + sum);
 }
 
