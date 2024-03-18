@@ -97,7 +97,6 @@ static void CalculateSum(in int[] array, int threadIndex, BigInteger[] results)
 static void LINQSum(int[] array)
 {
     BigInteger sum = array.AsParallel().Sum(e => (long)e);
-    //BigInteger sum = array.Aggregate(new BigInteger(0), (currentSum, item) => currentSum + item);
     Console.WriteLine("Sum: " + sum);
 }
 
